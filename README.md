@@ -3,7 +3,7 @@
 
 ![](/logo/skill_page.png)
 
-This skill broadcasts the latest Chinese news from [ReadHub](https://readhub.me/). Enable this skill to help you stay tuned with the latest technology news through [Echo](https://www.amazon.com/all-new-amazon-echo-speaker-with-wifi-alexa-dark-charcoal/dp/B06XCM9LJ4).
+This Alexa skill broadcasts the latest Chinese news from [ReadHub](https://readhub.me/). Enable this skill to help you stay tuned with the latest technology news through [Echo](https://www.amazon.com/all-new-amazon-echo-speaker-with-wifi-alexa-dark-charcoal/dp/B06XCM9LJ4).
 
 Please be aware that the news is broadcast in Chinese.
 
