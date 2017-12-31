@@ -8,6 +8,6 @@ This Alexa skill broadcasts the latest Chinese news from [ReadHub](https://readh
 Please be aware that the news is broadcast in Chinese.
 
 
-If you have an echo product, you can try and test on your device by [enable this skill](https://www.bioconductor.org/packages/cytofkit/), or try it [here](https://echosim.io/) if you don't! 
+If you have an echo product, you can [enable this skill](https://www.bioconductor.org/packages/cytofkit/) to try and test, or try it [here](https://echosim.io/) if you don't! 
 
 Welcome feedback and suggestions!
