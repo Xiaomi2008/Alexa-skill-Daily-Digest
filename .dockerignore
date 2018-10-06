@@ -1,0 +1,5 @@
+# ignore these files for docker building
+data
+lambda
+logo
+README.md
