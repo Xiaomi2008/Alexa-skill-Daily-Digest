@@ -92,13 +92,17 @@ make -f Makefile.unix
 ## 5. Configure AWS Batch Environment
 
 
+### Create IAM roles 
+
 Create IAM roles that provide service permissions using following script or manually through AWS IAM console
 
 ```
 aws cloudformation create-stack --template-body file:////Users/chenhao/GitProject/Alexa-skill-Daily-Digest/batch/aws_role_setup.yaml --stack-name iam --capabilities CAPABILITY_NAMED_IAM
 ```
 
-build a custom EC2 image
+NOTE: for `ecsInstanceRole`, using policy `AmazonEC2ContainerServiceforEC2Role-version4` instead of the default version 5(some problem existed)
+
+### Build a custom EC2 image
 
 modify the default Amazon `ECS-Optimized Amazon Linux AMI` from AWS marketplace in the following ways:
 
@@ -119,5 +123,11 @@ sudo mount -t ext4 /dev/xvdb /docker_scratch
 ## note the following path /dev/xvdb1 may change case by case
 echo "/dev/xvdb1 /docker_scratch auto noatime 0 0" | sudo tee -a /etc/fstab
 # Make sure nothing is wrong with fstab by mounting all
-mount -a
+sudo mount -a
+```
+
+### Create batch computing environment, queue, and rejister job definition
+
+```
+bash ./batch/batch_env_queue_job.sh
 ```

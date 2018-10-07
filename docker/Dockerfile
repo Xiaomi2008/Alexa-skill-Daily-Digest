@@ -1,7 +1,7 @@
-FROM python:2
+FROM python:3
 
 # Metadata
-LABEL container.base.image="python:2"
+LABEL container.base.image="python:3"
 LABEL software.name="daily_digest_alexa"
 LABEL software.version="1.0.0"
 LABEL software.description="A lazy way to crunch the latest Chinese news"

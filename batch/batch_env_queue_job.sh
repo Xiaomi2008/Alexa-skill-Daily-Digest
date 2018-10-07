@@ -11,7 +11,7 @@
 
 # ECR registry (region specific)
 REGISTRY=012532289196.dkr.ecr.ap-southeast-2.amazonaws.com
-KEYNAME=haoeric-alexa-ec2.pem                                       
+KEYNAME=haoeric-alexa-ec2                                      
 VPCID=vpc-dd2a3fb9                                            
 SUBNETS=subnet-11e52c58,subnet-2e33ed49,subnet-74eedf2d       
 SECGROUPS=sg-430a6125                                         
@@ -74,11 +74,10 @@ aws batch register-job-definition \
 aws batch submit-job \
 --job-name test_daily_digest_news_loader \
 --job-queue highPriority-haoeric-sydney-optimal-spot \
---job-definition daily_digest_news_loader:1 \
+--job-definition daily_digest_news_loader:2 \
 --container-overrides \
 '{"command":
 ["--bucket_key", "haoeric-daily-digest-news-audio",
 "--bucket_path", "fresh-news",
-"--working_dir", "/scratch",
-"--is_S3_data", "T"]}'
+"--working_dir", "/scratch"]}'
 
