@@ -88,6 +88,10 @@ make -f Makefile.unix
 
 ## 4. wrap up in a container and push to AWS ECS
 
+```
+## docker test
+docker run -it --entrypoint /bin/bash daily_digest_alexa
+```
 
 ## 5. Configure AWS Batch Environment
 
@@ -124,6 +128,9 @@ sudo mount -t ext4 /dev/xvdb /docker_scratch
 echo "/dev/xvdb1 /docker_scratch auto noatime 0 0" | sudo tee -a /etc/fstab
 # Make sure nothing is wrong with fstab by mounting all
 sudo mount -a
+
+sudo chmod 777 /docker_scratch
+sudo chown `whoami` /docker_scratch
 ```
 
 ### Create batch computing environment, queue, and rejister job definition

@@ -32,7 +32,7 @@ ENVNAME=haoeric-sydney-optimal-spot         # environment name
 EC2TYPE=SPOT                                # instance resource type
 MAXCPU=100                                  # max vCPUs in compute environment
 SPOTPER=70                                  # percentage of on demand
-IMAGEID=ami-0511394c8b6c9447e               # custom image with extra mounted EBS volumn
+IMAGEID=ami-00fdfc4230351e1f0               # custom image with extra mounted EBS volumn
 instanceTypes=optimal   
 
 aws batch create-compute-environment \

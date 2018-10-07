@@ -1,0 +1,8 @@
+{
+    "job_name": "load daily digest news",
+    "bucket_key": "haoeric-daily-digest-news-audio",
+    "bucket_path": "fresh-news",
+    "working_dir": "/scratch",
+    "jobDefinition": "daily_digest_news_loader:2",
+    "jobQueue": "highPriority-haoeric-sydney-optimal-spot"
+}
