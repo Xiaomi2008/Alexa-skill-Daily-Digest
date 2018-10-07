@@ -82,7 +82,7 @@ def news_loader(bucket_key, bucket_path, working_dir):
         txt_file_handler.close()
 
         print("Upload news txt to S3")
-        txt_s3_key = bucket_path + "/" + out_txt_file
+        txt_s3_key = bucket_path + "/" + os.path.basename(out_txt_file)
         s3.upload_file(out_txt_file, bucket_key, txt_s3_key)
         s3.put_object_acl(ACL='public-read', Bucket=bucket_key, Key= txt_s3_key)
 
@@ -100,7 +100,7 @@ def news_loader(bucket_key, bucket_path, working_dir):
 
         ## uploaded to AWS S3 (bucket: fresh-news)
         print("Upload news audio to S3")
-        mp3_s3_key = bucket_path + "/" + out_mp3_file
+        mp3_s3_key = bucket_path + "/" + os.path.basename(out_mp3_file)
         s3.upload_file(out_mp3_file, bucket_key, mp3_s3_key)
         s3.put_object_acl(ACL='public-read', Bucket=bucket_key, Key= mp3_s3_key)
         
