@@ -15,7 +15,7 @@ Welcome feedback and suggestions!
 
 # How is This Made
 
-## Create a Spider to crawl the news from readhub.com
+## 1. Create a Spider to crawl the news from readhub.com
 
 ### Creating a scrapy project
 
@@ -70,7 +70,7 @@ Go to the project’s top level directory and run:
 scrapy crawl readhub -t csv -o "readhub.csv" --loglevel=INFO
 ```
 
-## install keda xunfei
+## 2. install keda xunfei
 
 Download `xunfei_tts` from 
 
@@ -78,10 +78,46 @@ Download `xunfei_tts` from
 bash 64bit_make.sh
 ```
 
-## install lame
+## 3. install lame
 
 download from [lame v3.100](https://sourceforge.net/projects/lame/files/lame/3.100/)
 
 ```
 make -f Makefile.unix
+```
+
+## 4. wrap up in a container and push to AWS ECS
+
+
+## 5. Configure AWS Batch Environment
+
+
+Create IAM roles that provide service permissions using following script or manually through AWS IAM console
+
+```
+aws cloudformation create-stack --template-body file:////Users/chenhao/GitProject/Alexa-skill-Daily-Digest/batch/aws_role_setup.yaml --stack-name iam --capabilities CAPABILITY_NAMED_IAM
+```
+
+build a custom EC2 image
+
+modify the default Amazon `ECS-Optimized Amazon Linux AMI` from AWS marketplace in the following ways:
+
+- Attach a 50 GB scratch volume to `/dev/sdb`
+- Mount the scratch volume to `/docker_scratch` by modifying `/etcfstab`. (After your instance has launched, record the IP address and then SSH into the instance, run the following code)
+
+```
+sudo yum -y update
+# Check the device name
+sudo fdisk -l
+# Make directory to where you want to mount the volume
+sudo mkdir /docker_scratch
+# Create filesystem on your volume 
+sudo mkfs.ext4 /dev/xvdb
+# Mount volume
+sudo mount -t ext4 /dev/xvdb /docker_scratch
+# If you want to preserve the mount after e.g. a restart, open /etc/fstab and add the mount to it
+## note the following path /dev/xvdb1 may change case by case
+echo "/dev/xvdb1 /docker_scratch auto noatime 0 0" | sudo tee -a /etc/fstab
+# Make sure nothing is wrong with fstab by mounting all
+mount -a
 ```
