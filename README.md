@@ -130,7 +130,6 @@ echo "/dev/xvdb1 /docker_scratch auto noatime 0 0" | sudo tee -a /etc/fstab
 sudo mount -a
 
 sudo chmod 777 /docker_scratch
-sudo chown `whoami` /docker_scratch
 ```
 
 ### Create batch computing environment, queue, and rejister job definition
@@ -138,3 +137,12 @@ sudo chown `whoami` /docker_scratch
 ```
 bash ./batch/batch_env_queue_job.sh
 ```
+
+
+### create lambda function and cloudwatch event
+
+
+
+
+
+## 6. Build Alexa APP
