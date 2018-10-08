@@ -5,6 +5,7 @@ import csv
 import uuid
 import time
 import boto3
+import shlex
 import shutil
 import argparse
 import subprocess
@@ -29,6 +30,20 @@ def generate_working_dir(working_dir_base):
     return working_dir
 
 
+def upload_folder(s3_path, local_folder_path, sse=True):
+    """
+    Uploads a local folder to S3
+    :param s3_path: s3 path to upload folder to
+    :param local_folder_path: local folder path
+    :param sse: boolean whether to enable server-side encryption
+    """
+    cmd = 'aws s3 cp --recursive %s %s' % (local_folder_path, s3_path)
+
+    if sse:
+        cmd += ' --sse'
+
+    subprocess.check_call(shlex.split(cmd))
+
 
 def delete_working_dir(working_dir):
     """
@@ -48,6 +63,10 @@ def news_loader(bucket_key, bucket_path, working_dir):
     date = time.strftime("%d-%m-%Y")
     print("Start news scrawling at: " + date)
     working_dir = generate_working_dir(working_dir)
+
+    upload_to_s3 = False
+    if working_dir == "/scratch":
+        upload_to_s3 = True
 
     ## crawl data
     scrapy_output_file = os.path.join(working_dir, date + ".csv")
@@ -72,7 +91,7 @@ def news_loader(bucket_key, bucket_path, working_dir):
         in_txt = re.sub(r2, '。', in_txt)
         in_txt = " "*5 + in_txt
 
-        ## save txt to file and upload to S3
+        ## save txt to file
         out_txt_file = os.path.join(working_dir, "fresh_news_" + str(news_id) + ".txt")
         txt_file_handler = open(out_txt_file, 'w')
         txt_file_handler.write(id +'\n')
@@ -80,12 +99,7 @@ def news_loader(bucket_key, bucket_path, working_dir):
         txt_file_handler.write(date +'\n')
         txt_file_handler.write(source +'\n')
         txt_file_handler.close()
-
-        print("Upload news txt to S3")
-        txt_s3_key = bucket_path + "/" + os.path.basename(out_txt_file)
-        s3.upload_file(out_txt_file, bucket_key, txt_s3_key)
-        s3.put_object_acl(ACL='public-read', Bucket=bucket_key, Key= txt_s3_key)
-
+    
         ## convert text to audio, gb2312 is the default incoding for xunfei tts SDK
         out_wav_file = os.path.join(working_dir, "fresh_news_" + str(news_id) + ".wav")
         try:
@@ -98,18 +112,17 @@ def news_loader(bucket_key, bucket_path, working_dir):
         out_mp3_file = os.path.join(working_dir, "fresh_news_" + str(news_id) + ".mp3")
         subprocess.call(["lame", out_wav_file, out_mp3_file])
 
-        ## uploaded to AWS S3 (bucket: fresh-news)
-        print("Upload news audio to S3")
-        mp3_s3_key = bucket_path + "/" + os.path.basename(out_mp3_file)
-        s3.upload_file(out_mp3_file, bucket_key, mp3_s3_key)
-        s3.put_object_acl(ACL='public-read', Bucket=bucket_key, Key= mp3_s3_key)
-        
         news_id += 1
 
     f.close()
-    print('Cleaning up working dir')
-    delete_working_dir(working_dir)
+
+    if upload_to_s3:
+        print("Upload news to S3")
+        upload_folder("s3://" + bucket_key + "/" + bucket_path + "/", working_dir)
+        print('Cleaning up working dir')
+        delete_working_dir(working_dir)
                    
+
 
 def main():
     parser = argparse.ArgumentParser('Daily Digest - Alexa Skill')
@@ -117,9 +130,10 @@ def main():
     parser.add_argument('--bucket_path', default = 'fresh-news', type=str, help='file path above bucket', required=True)
     parser.add_argument('--working_dir', type=str, help='code working directory', default='/scratch')
     args = parser.parse_args()
-
+    
     news_loader(args.bucket_key, args.bucket_path, args.working_dir)
     
+
 
 if __name__ == '__main__':
     main()
