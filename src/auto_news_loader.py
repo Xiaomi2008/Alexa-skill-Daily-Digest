@@ -86,7 +86,7 @@ def news_loader(bucket_key, bucket_path, working_dir):
         ## tidy up Chinese text
         in_txt = title + '。' + content
         ## remove unicode, not supported by xunfei tts
-        r1 = u'[【】「」《》“”‘’\[\]{}&\'*/<=>@★、^_{|} \s]+'
+        r1 = u'[【】「」《》“”‘’\[\]{}&\'*/<=>@★^_{|} \s]+'
         in_txt = re.sub(r1, '', in_txt)
         ## remove ... at the end of the news
         r2 = u'[.]{3}'   
