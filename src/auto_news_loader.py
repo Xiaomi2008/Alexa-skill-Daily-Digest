@@ -59,14 +59,14 @@ def delete_working_dir(working_dir):
 
 
 def news_loader(bucket_key, bucket_path, working_dir):
+    
+    upload_to_s3 = False
+    if working_dir == "/scratch":
+        upload_to_s3 = True
 
     date = time.strftime("%d-%m-%Y")
     print("Start news scrawling at: " + date)
     working_dir = generate_working_dir(working_dir)
-
-    upload_to_s3 = False
-    if working_dir == "/scratch":
-        upload_to_s3 = True
 
     ## crawl data
     scrapy_output_file = os.path.join(working_dir, date + ".csv")
@@ -83,13 +83,16 @@ def news_loader(bucket_key, bucket_path, working_dir):
         content = row['content']
         source  = row['source']
         
-        ## tidy Chinese text
-        in_txt = title + "。" + content
-        r1 = u'[()（）【】「」《》“”‘’\[\]{}&\'*/<=>@★、^_{|} \s]+'
+        ## tidy up Chinese text
+        in_txt = title + '。' + content
+        ## remove unicode, not supported by xunfei tts
+        r1 = u'[【】「」《》“”‘’\[\]{}&\'*/<=>@★、^_{|} \s]+'
         in_txt = re.sub(r1, '', in_txt)
+        ## remove ... at the end of the news
         r2 = u'[.]{3}'   
         in_txt = re.sub(r2, '。', in_txt)
-        in_txt = " "*5 + in_txt
+        ## add pause between news
+        in_txt = ':'*5 + in_txt + ':'*5
 
         ## save txt to file
         out_txt_file = os.path.join(working_dir, "fresh_news_" + str(news_id) + ".txt")
@@ -103,7 +106,8 @@ def news_loader(bucket_key, bucket_path, working_dir):
         ## convert text to audio, gb2312 is the default incoding for xunfei tts SDK
         out_wav_file = os.path.join(working_dir, "fresh_news_" + str(news_id) + ".wav")
         try:
-            subprocess.call(["mytts", in_txt.encode("gb2312"), out_wav_file, "xiaoyan"])
+            subprocess.call(["mytts", in_txt.encode("gb2312"), out_wav_file, "xiaoyan",
+            "text_encoding = utf8, sample_rate = 16000, speed = 50, volume = 60, pitch = 50, rdn = 2"])
         except Exception:
             print("Message translate to audio failed!")
             continue

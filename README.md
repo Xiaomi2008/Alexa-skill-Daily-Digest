@@ -72,11 +72,13 @@ scrapy crawl readhub -t csv -o "readhub.csv" --loglevel=INFO
 
 ## 2. install keda xunfei
 
-Download `xunfei_tts` from 
+Download `xunfei_tts` from [xfyun](https://www.xfyun.cn/services/online_tts)
 
 ```
 bash 64bit_make.sh
 ```
+
+paramter set up and [configuration](http://bbs.xfyun.cn/forum.php?mod=viewthread&tid=15340)
 
 ## 3. install lame
 
