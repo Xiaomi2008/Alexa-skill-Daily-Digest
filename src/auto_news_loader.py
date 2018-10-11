@@ -92,7 +92,7 @@ def news_loader(bucket_key, bucket_path, working_dir):
         r2 = u'[.]{3}'   
         in_txt = re.sub(r2, '。', in_txt)
         ## add pause between news
-        in_txt = ':'*5 + in_txt + ':'*5
+        in_txt = ':'*5 + in_txt
 
         ## save txt to file
         out_txt_file = os.path.join(working_dir, "fresh_news_" + str(news_id) + ".txt")
