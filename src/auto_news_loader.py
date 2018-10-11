@@ -37,7 +37,7 @@ def upload_folder(s3_path, local_folder_path, sse=True):
     :param local_folder_path: local folder path
     :param sse: boolean whether to enable server-side encryption
     """
-    cmd = 'aws s3 cp --recursive %s %s' % (local_folder_path, s3_path)
+    cmd = 'aws s3 cp --recursive %s %s --acl public-read' % (local_folder_path, s3_path)
 
     if sse:
         cmd += ' --sse'
